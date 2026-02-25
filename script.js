@@ -89,31 +89,36 @@ function init() {
                 toggleFlag(div);
             });
             
-            // LONG PRESS (MOBILE FIXED)
-            let pressTimer;
-            let longPressTriggered = false;
+            // LONG PRESS (MOBILE - STABLE FIX)
+            let pressTimer = null;
+            let isLongPress = false;
             
             div.addEventListener("touchstart", (e) => {
-                longPressTriggered = false;
+                if (gameOver) return;
+            
+                isLongPress = false;
             
                 pressTimer = setTimeout(() => {
                     toggleFlag(div);
-                    longPressTriggered = true;
+                    isLongPress = true;
                 }, 500);
             });
             
             div.addEventListener("touchend", (e) => {
                 clearTimeout(pressTimer);
             
-                // If long press happened, prevent click
-                if (longPressTriggered) {
+                // If long press happened, stop click from firing
+                if (isLongPress) {
                     e.preventDefault();
+                    e.stopPropagation();
                 }
             });
             
             div.addEventListener("touchmove", () => {
                 clearTimeout(pressTimer);
             });
+
+            
             boardElement.appendChild(div);
         }
         board.push(row);
@@ -269,4 +274,5 @@ function chainExplosion() {
 
 
 init();
+
 
